@@ -6,6 +6,7 @@ import com.rafaelfq.sistema_gestao_estacionamento.web.dto.UsuarioCreateDTO;
 import com.rafaelfq.sistema_gestao_estacionamento.web.dto.UsuarioResponseDTO;
 import com.rafaelfq.sistema_gestao_estacionamento.web.dto.UsuarioSenhaDTO;
 import com.rafaelfq.sistema_gestao_estacionamento.web.dto.mapper.UsuarioMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class UsuarioController {
    }
 
    @PostMapping
-   public ResponseEntity<UsuarioResponseDTO> create(@RequestBody UsuarioCreateDTO createDTO){
+   public ResponseEntity<UsuarioResponseDTO> create(@Valid @RequestBody UsuarioCreateDTO createDTO){
       Usuario user = usuarioService.salvar(UsuarioMapper.toUsuario(createDTO));
       return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDto(user));
    }
@@ -35,7 +36,7 @@ public class UsuarioController {
    }
 
    @PatchMapping("/{id}")
-   public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UsuarioSenhaDTO dto){
+   public ResponseEntity<Void> updatePassword(@Valid @PathVariable Long id, @RequestBody UsuarioSenhaDTO dto){
       Usuario user = usuarioService.editarSenha(id, dto.getSenhaAtual(), dto.getNovaSenha(), dto.getConfirmaSenha());
       return ResponseEntity.noContent().build();
    }

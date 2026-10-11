@@ -39,6 +39,7 @@ public class UsuarioController {
                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
          @ApiResponse(responseCode = "422", description = "Recurso não processado por dados de entrada inválidos",
                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+
       })
    @PostMapping
    public ResponseEntity<UsuarioResponseDTO> create(@Valid @RequestBody UsuarioCreateDTO createDTO){
@@ -66,10 +67,12 @@ public class UsuarioController {
                @ApiResponse(responseCode = "400", description = "Senha não confere",
                      content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                @ApiResponse(responseCode = "404", description = "Recurso não encontrado",
+                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+               @ApiResponse(responseCode = "422", description = "Campos inválidos ou mal formatados",
                      content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
          })
    @PatchMapping("/{id}")
-   public ResponseEntity<Void> updatePassword(@Valid @PathVariable Long id, @RequestBody UsuarioSenhaDTO dto){
+   public ResponseEntity<Void> updatePassword(@PathVariable Long id, @Valid @RequestBody UsuarioSenhaDTO dto){
       Usuario user = usuarioService.editarSenha(id, dto.getSenhaAtual(), dto.getNovaSenha(), dto.getConfirmaSenha());
       return ResponseEntity.noContent().build();
    }

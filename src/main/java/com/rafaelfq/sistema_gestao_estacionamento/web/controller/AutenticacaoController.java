@@ -3,7 +3,13 @@ package com.rafaelfq.sistema_gestao_estacionamento.web.controller;
 import com.rafaelfq.sistema_gestao_estacionamento.jwt.JwtToken;
 import com.rafaelfq.sistema_gestao_estacionamento.jwt.JwtUserDetailsService;
 import com.rafaelfq.sistema_gestao_estacionamento.web.dto.UsuarioLoginDTO;
+import com.rafaelfq.sistema_gestao_estacionamento.web.dto.UsuarioResponseDTO;
 import com.rafaelfq.sistema_gestao_estacionamento.web.exception.ErrorMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Autenticação", description = "Recurso para proceder com a autenticação na API")
 @Slf4j
 @RestController
 @RequestMapping("/api/v1")
@@ -29,6 +36,16 @@ public class AutenticacaoController {
       this.detailsService = detailsService;
       this.authenticationManager = authenticationManager;
    }
+
+   @Operation(summary = "Autenticar na API", description = "Recurso de autenticação na API",
+         responses = {
+               @ApiResponse(responseCode = "200", description = "Autenticação realizada com sucesso e retorno de um bearer token",
+                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDTO.class))),
+               @ApiResponse(responseCode = "400", description = "Credenciais inválidas",
+                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+               @ApiResponse(responseCode = "422", description = "Campo(s) inválido(s)",
+                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+         })
 
    @PostMapping("/auth")
    public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDTO dto, HttpServletRequest request){
